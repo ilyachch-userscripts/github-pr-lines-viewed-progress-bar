@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GitHub PR: Lines Viewed Progress Bar
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Adds a progress bar to GitHub PRs showing the number of lines viewed based on reviewed checkboxes.
 // @author       ilyachch
 // @homepage     https://github.com/ilyachch-userscripts/github-pr-lines-viewed-progress-bar
@@ -30,41 +30,14 @@
   let debounceTimer = null;
 
   function getChangesFromFile(fileElement) {
-    const infoBlock = fileElement.querySelector(SELECTORS.fileInfo);
-    if (!infoBlock) return 0;
+    const diffStat = fileElement.querySelector("span.diffstat");
+    if (!diffStat) return 0;
 
-    const textContent = infoBlock.textContent || "";
+    const rawValue = (diffStat.textContent || "").trim();
+    if (!rawValue) return 0;
 
-    const addTextMatch = textContent.match(/(\d+)\s+additions?/i);
-    const delTextMatch = textContent.match(/(\d+)\s+deletions?/i);
-    if (addTextMatch || delTextMatch) {
-      const a = addTextMatch ? parseInt(addTextMatch[1], 10) : 0;
-      const d = delTextMatch ? parseInt(delTextMatch[1], 10) : 0;
-      return a + d;
-    }
-
-    const diffStat = infoBlock.querySelector(".diffstat");
-    const titleText =
-      (diffStat && diffStat.getAttribute("title")) ||
-      infoBlock.getAttribute("title") ||
-      "";
-    const addTitleMatch = titleText.match(/(\d+)\s+additions?/i);
-    const delTitleMatch = titleText.match(/(\d+)\s+deletions?/i);
-    if (addTitleMatch || delTitleMatch) {
-      const a = addTitleMatch ? parseInt(addTitleMatch[1], 10) : 0;
-      const d = delTitleMatch ? parseInt(delTitleMatch[1], 10) : 0;
-      return a + d;
-    }
-
-    const plusMatch = textContent.match(/\+\s*(\d+)/);
-    const minusMatch = textContent.match(/[-−—]\s*(\d+)/);
-    if (plusMatch || minusMatch) {
-      const a = plusMatch ? parseInt(plusMatch[1], 10) : 0;
-      const d = minusMatch ? parseInt(minusMatch[1], 10) : 0;
-      return a + d;
-    }
-
-    return 0;
+    const numericValue = parseInt(rawValue.replace(/,/g, ""), 10);
+    return Number.isNaN(numericValue) ? 0 : numericValue;
   }
 
   function calculateAndDisplay() {
