@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         GitHub PR: Lines Viewed Progress Bar
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/ilyachch-userscripts/
 // @version      1.1
 // @description  Adds a progress bar to GitHub PRs showing the number of lines viewed based on reviewed checkboxes.
 // @author       ilyachch
@@ -10,8 +10,7 @@
 // @updateURL    https://raw.githubusercontent.com/ilyachch-userscripts/github-pr-lines-viewed-progress-bar/main/github-pr-lines-viewed-progress-bar.user.js
 // @downloadURL  https://raw.githubusercontent.com/ilyachch-userscripts/github-pr-lines-viewed-progress-bar/main/github-pr-lines-viewed-progress-bar.user.js
 // @license      MIT
-//
-// @run-at       document-end
+// @run-at       document-idle
 // @match        https://github.com/*/*/pull/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=github.com
 // ==/UserScript==
